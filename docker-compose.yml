@@ -10,7 +10,7 @@ services:
     # platform: linux/amd64  # Optional: force specific platform (linux/amd64, linux/arm64)
     container_name: certmate
     ports:
-      - "8000:8000"  # Exposed for reverse proxies (Coolify, nginx, Traefik). Bind to 127.0.0.1:8000:8000 to restrict to localhost.
+      - "7752:7752"  # Exposed for reverse proxies (Coolify, nginx, Traefik). Bind to 127.0.0.1:8000:8000 to restrict to localhost.
     environment:
       - FLASK_ENV=production
       - SECRET_KEY=${SECRET_KEY:-}  # Auto-generated if empty; set a strong value for production
