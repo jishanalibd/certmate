@@ -10,15 +10,18 @@ services:
     # platform: linux/amd64  # Optional: force specific platform (linux/amd64, linux/arm64)
     container_name: certmate
     ports:
-      - "127.0.0.1:8000:8000"  # Bind to localhost only; use nginx profile for external access
+      - "8000:8000"  # Exposed for reverse proxies (Coolify, nginx, Traefik). Bind to 127.0.0.1:8000:8000 to restrict to localhost.
     environment:
       - FLASK_ENV=production
       - SECRET_KEY=${SECRET_KEY:-}  # Auto-generated if empty; set a strong value for production
-      - CLOUDFLARE_TOKEN=${CLOUDFLARE_TOKEN}
-      - API_BEARER_TOKEN=${API_BEARER_TOKEN}
+      - CLOUDFLARE_TOKEN=${CLOUDFLARE_TOKEN:-}
+      - API_BEARER_TOKEN=${API_BEARER_TOKEN:-}
       - PORT=${PORT:-8000}                      # Internal listen port; also update ports: mapping if changed
       - GUNICORN_TIMEOUT=${GUNICORN_TIMEOUT:-300}  # Worker timeout; increase for slow DNS providers
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL:-}    # Overrides the email set via the web UI when set
+      # PowerDNS: set these to configure PowerDNS as the default DNS provider via env vars
+      - POWERDNS_API_URL=${POWERDNS_API_URL:-}
+      - POWERDNS_API_KEY=${POWERDNS_API_KEY:-}
     volumes:
       - ./certificates:/app/certificates:rw
       - ./logs:/app/logs:rw

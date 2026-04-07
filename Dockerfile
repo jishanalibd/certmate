@@ -22,6 +22,13 @@ ARG REQUIREMENTS_FILE=requirements.txt
 RUN pip install -U pip setuptools wheel && \
     pip install --no-cache-dir -r ${REQUIREMENTS_FILE}
 
+# Install certbot-dns-powerdns separately with --no-deps to bypass the
+# dns-lexicon version conflict (0.2.1 requires <=3.5.6, other plugins require >=3.14).
+# certbot-dns-powerdns 0.2.1 uses lexicon.client.Client and lexicon.config.ConfigResolver
+# with the 'powerdns' provider, which remain present in dns-lexicon 3.x through at least
+# 3.18 (latest at time of writing). Monitor https://github.com/AnalogJ/lexicon for changes.
+RUN pip install --no-cache-dir --no-deps certbot-dns-powerdns==0.2.1
+
 # Production stage
 FROM python:3.12-slim
 
