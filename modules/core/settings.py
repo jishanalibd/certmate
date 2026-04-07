@@ -258,6 +258,21 @@ class SettingsManager:
                     settings['dns_providers']['cloudflare'] = {'accounts': {'default': {}}}
                 settings['dns_providers']['cloudflare']['accounts']['default']['api_token'] = os.getenv('CLOUDFLARE_TOKEN')
 
+            powerdns_url = os.getenv('POWERDNS_API_URL')
+            powerdns_key = os.getenv('POWERDNS_API_KEY')
+            if powerdns_url or powerdns_key:
+                if 'powerdns' not in settings['dns_providers']:
+                    settings['dns_providers']['powerdns'] = {'accounts': {'default': {}}}
+                pdns = settings['dns_providers']['powerdns']
+                if 'accounts' not in pdns:
+                    pdns['accounts'] = {'default': {}}
+                if 'default' not in pdns['accounts']:
+                    pdns['accounts']['default'] = {}
+                if powerdns_url:
+                    pdns['accounts']['default']['api_url'] = powerdns_url
+                if powerdns_key:
+                    pdns['accounts']['default']['api_key'] = powerdns_key
+
             return settings
             
         except Exception as e:
